@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+        <div class="w3-display-top">
+            <h1 class="w3-jumbo w3-animate-top w3-center">Let's Go Hiking</h1>
+            <hr class="w3-border-grey" style="margin:auto;width:40%">
+            <p class="w3-large w3-center">I wanna go <a href="{{ url_for('sign') }}">here</a></p>
+            <hr class="w3-border-grey" style="margin:auto;width:40%">
+            <h1 class="w3-padding-large w3-xlarge w3-center">Registrar of Spots</h1>
+            {% for entry in entries %}
+                <p class="entry w3-center">
+                {{ entry.name }} <br>{{ entry.streetaddress }} {{ entry.city }} , {{ entry.state }} {{ entry.zipcode }}
+                <br> {{ entry.date }}<br>
+                {{ entry.note }}
+                </p>
+            {% endfor %}
+                <script src="https://cdn.aerisapi.com/wxblox/latest/aeris-wxblox.js"></script>
+                <div id="wxblox" class="aeris-wrapper w3-padding-large w3-display-left"></div>
+                <script>
+                        // set Aeris account access keys
+                        const aeris = new AerisWeather('{{client_id}}', '{{client_secret}}');
+                        {% for entry in entries %}
+                        aeris.on('ready', () => {
+                            // create desired WeatherBlox instance
+                            var view = new aeris.wxblox.views.DayNightForecast('#wxblox');
+                            // load data and render the view for a specific location
+                            view.load({
+                                p: '{{entry.city}},{{entry.state}}'
+                            });
+                        });
+                        {% endfor %}
+                        </script>
+        </div>
+{% endblock %}

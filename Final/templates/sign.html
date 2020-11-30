@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="w3-display-middle">
+		<h1 class="w3-jumbo w3-animate-top w3-center">Where's the Spot?</h1>
+		<form action="{{ url_for('sign') }}" method=post>
+		<hr class="w3-border-grey" style="margin:auto;width:40%">
+		<h1 class="w3-large w3-center"></h1>
+			<p class="w3-large w3-center">I call it <input type=text name=name>
+			<p class="w3-large w3-center">Street Address <input type=text name=streetaddress>
+			<p class="w3-large w3-center">City <input type=text name=city>
+			<p class="w3-large w3-center">State <input type=text name=state>
+			<p class="w3-large w3-center">Zipcode <input type=int name=zipcode>
+			<p class="w3-large w3-center">I wanna go on (YYYY-MM-DD) <input type=text name=date>
+			<p class="w3-large w3-center">A note to self <input type=text name=note>
+			<p><input type=submit value=Enter></p>
+		</form>
+	</div>
+{% endblock %}

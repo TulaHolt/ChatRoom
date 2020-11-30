@@ -1,0 +1,12 @@
+body,h1 {font-family: "Raleway", sans-serif}
+form       { margin:.1em auto; padding:.1em; width: 400px; border: 1px }
+body, html {height: 100%}
+.bgimg {
+  background-image: url('https://mocah.org/uploads/posts/5307397-person-hike-explore-landscape-sunrise-hawaii-girl-wallpaper-hiker-wallpaper-hd-mountain-public-domain-images.jpg');
+  min-height: 100%;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+}
+.page      { margin:.1em auto; padding:.1em; width: 504px;  }
+.entry     { margin-bottom: 2em; padding-bottom: 2em; border-bottom: 1px solid #888; }
