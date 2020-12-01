@@ -1,0 +1,7 @@
+"""
+Access keys from AWS environment
+"""
+
+ACCESS_KEY_ID='AKIAI3RQP2Y7STASRFCA'
+ACCESS_SECRET_KEY='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'
+

@@ -1,0 +1,9 @@
+# Web Framework
+flask
+flask-socketio
+
+# AWS libraries
+boto3
+
+#  Python WSGI HTTP server (connects web servers such as nginx to app)
+gunicorn
