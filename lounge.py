@@ -7,15 +7,14 @@ class Room:
         self.nicks = []
         self.name = roomName
 
-    def displayNicks(self, user):
-        for names in self.nicks:
-            user.socket.sendall(b"" + self.nicks[names].encode())
 
     def broadcast(self, user, msg):
-        msg = user.name + msg
+        self.msg = user.name + ": " + msg
         self.history = self.history + str(msg)
         for nick in self.nicks:
-            nick.socket.sendall(msg.encode())
+            print("loop")
+            nick.socket.sendall(self.msg.encode())
+            #nick.socket.sendall(b"")#msg.encode())
 
 
     def userSetup(self, user):

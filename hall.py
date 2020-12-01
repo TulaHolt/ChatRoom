@@ -18,11 +18,11 @@ class Hall:
             self.createRoom(user, str(message))
         elif "/display all" in message:
             self.listrooms(user)
+        elif "/join" in message:
+            self.joinRoom(user, message)
         else:
             if user.name in self.usersRoom:
-                print("test")
                 self.rooms[self.usersRoom[user.name]].broadcast(user, message)
-                print("pass")
             else:
                 print("user not in room")
                 user.socket.sendall(b"error: not in a room")
@@ -45,7 +45,11 @@ class Hall:
     def listrooms(self, user):
         for name in self.names:
             user.socket.sendall(b"" + self.rooms[name].name.encode() + b'\n')
-            self.rooms[name].displayNicks(user)
+            user.socket.sendall(str(self.rooms[name].nicks).encode() + b'\n')
+            #self.rooms[name].displayNicks(user)
 
-
+    def joinRoom(self, user, msg):
+        rn = msg.split()
+        rName = str(rn[1])
+        self.addtoRoom(user, rName)
 
