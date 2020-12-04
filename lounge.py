@@ -7,6 +7,9 @@ class Room:
         self.nicks = []
         self.name = roomName
 
+    def displayNicks(self, user):
+        for nick in self.nicks:
+            user.socket.sendall(nick.name)
 
     def broadcast(self, user, msg):
         self.msg = user.name + ": " + msg

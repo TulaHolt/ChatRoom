@@ -24,7 +24,7 @@ def sendM(user):
     while True:
         try:
             message = client.recv(bufferSize).decode()
-            #print(message)
+            print(user.name + " Is talking:\n")
             hallway.get(user, message)
         except:
             index = clients.index(client)
@@ -66,7 +66,7 @@ while True:
     clients.append(client)
 
     print("Nickname is {}".format(user.name))
-    broadcast("{} joined!".format(user.name).encode())
+    broadcast("{} joined! The Server".format(user.name).encode())
     client.send('Connected to server!'.encode())
     thread = threading.Thread(target=sendM, args=(user,))
     thread.start()

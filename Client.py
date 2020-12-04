@@ -42,6 +42,7 @@ else :
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(address)
     print("connected to " , address)
+    print(client)
 
     name = input("what's your name: ")
     print ("Welcome, " , name)
