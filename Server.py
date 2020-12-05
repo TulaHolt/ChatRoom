@@ -1,5 +1,5 @@
 import socket, sys
-from threading import Thread
+import threading
 from hall import Hall
 from player import Player
 #constants list
@@ -60,8 +60,8 @@ while True:
     print("{} joined the server".format(user.name))
     #server.sendall("{} joined The Server".format(user.name).encode())
 
-    Thread(target = sendM, args = user)
-    #Thread.start()
+    serveT = threading.Thread(target = sendM, args = (user,))
+    serveT.start()
 
 
 
