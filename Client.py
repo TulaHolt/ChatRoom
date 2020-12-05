@@ -19,10 +19,11 @@ def receive():
             print("An error occured!")
             client.close()
             break
+
+
 def write():
     while True:
-        msg = input('')
-        #message = '{}: {}'.format(name, msg)
+        msg = input('>')
         if msg == "/quit":
             message = '{} logged out'.format(name)
             client.send(message.encode())
@@ -42,10 +43,8 @@ else :
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(address)
     print("connected to " , address)
-    print(client)
 
     name = input("what's your name: ")
-    print ("Welcome, " , name)
 
 receive_thread = threading.Thread(target=receive)
 receive_thread.start()

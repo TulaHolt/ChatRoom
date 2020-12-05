@@ -1,4 +1,5 @@
-import socket, sys, threading
+import socket, sys
+from threading import Thread
 from hall import Hall
 from player import Player
 #constants list
@@ -8,27 +9,20 @@ bufferSize = 4096               #Gotta figure out this still
 MAXUSERS = 5                    #How many users can connect to chat service
 HOST = ''                       #Stores IP address for host
 
-#variables
 
-clients = []
 
 #functions
 
 
-def broadcast(message):
-    for client in clients:
-        client.send(message)
 
 
 def sendM(user):
     while True:
         try:
             message = client.recv(bufferSize).decode()
-            print(user.name + " Is talking:\n")
+            print(message)
             hallway.get(user, message)
         except:
-            index = clients.index(client)
-            clients.remove(client)
             client.close()
             break
 
@@ -63,13 +57,11 @@ while True:
     client.send('NICKNAME'.encode())
     nickname = client.recv(bufferSize).decode()
     user = Player(client, nickname)
-    clients.append(client)
+    print("{} joined the server".format(user.name))
+    #server.sendall("{} joined The Server".format(user.name).encode())
 
-    print("Nickname is {}".format(user.name))
-    broadcast("{} joined! The Server".format(user.name).encode())
-    client.send('Connected to server!'.encode())
-    thread = threading.Thread(target=sendM, args=(user,))
-    thread.start()
+    Thread(target = sendM, args = user)
+    #Thread.start()
 
 
 
