@@ -5,7 +5,7 @@ from player import Player
 #constants list
 
 PORT = 8000                     #Can be any number really, just details what port to connect to within the given ip
-bufferSize = 4096               #Gotta figure out this still
+bufferSize = 'ascii'               #Gotta figure out this still
 MAXUSERS = 5                    #How many users can connect to chat service
 HOST = ''                       #Stores IP address for host
 
@@ -19,7 +19,7 @@ HOST = ''                       #Stores IP address for host
 def sendM(user):
     while True:
         try:
-            message = client.recv(bufferSize).decode()
+            message = client.recv(1024).decode(bufferSize)
             print(message)
             hallway.get(user, message)
         except:
@@ -54,8 +54,8 @@ hallway = Hall()
 
 while True:
     client, address = server.accept()
-    client.send('NICKNAME'.encode())
-    nickname = client.recv(bufferSize).decode()
+    client.send('NICKNAME'.encode(bufferSize))
+    nickname = client.recv(1024).decode(bufferSize)
     user = Player(client, nickname)
     print("{} joined the server".format(user.name))
     #server.sendall("{} joined The Server".format(user.name).encode())

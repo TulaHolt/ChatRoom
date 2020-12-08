@@ -6,31 +6,29 @@ class Hall:
     def __init__ (self):
         self.rooms = {}
         self.names = []
-        self.numUsers = 0
         self.usersRoom = {}
         self.disp = []
         self.commandList = b'Commands:\n'
 
     def get(self, user, message):
-        print("{}: {}".format(user.name, message))
         #user.socket.sendall(message.encode(4096))
         if "/create" in message:
-            self.createRoom(user, str(message))
+            self.createRoom(user, message)
         elif "/display all" in message:
             self.listrooms(user)
         elif "/join" in message:
             self.joinRoom(user, message)
+        elif user in self.usersRoom:
+            for user in self.usersRoom:
+                self.rooms[self.usersRoom[user]].broadcast(message)
         else:
-            if user in self.usersRoom:
-                self.rooms[self.usersRoom[user]].broadcast(user, message)
-            else:
-                print("user not in room")
-                user.socket.sendall(b"error: not in a room")
+            print("user not in room")
+            user.socket.sendall(b"error: not in a room")
 
 
     def createRoom(self, user, msg):
         rn = msg.split()
-        rName = str(rn[1])
+        rName = str(rn[2])
         print(rName)
         room = Room(rName)
         self.names.append(rName)
@@ -45,12 +43,11 @@ class Hall:
 
     def listrooms(self, user):
         for name in self.names:
-            user.socket.sendall(b"" + self.rooms[name].name.encode() + b'\n')
-            #user.socket.sendall(str(self.rooms[name].nicks).encode() + b'\n')
-            #self.rooms[name].displayNicks(user)
+            user.socket.send(b"\n" + self.rooms[name].name.encode())
+            self.rooms[name].displayNicks(user)
 
     def joinRoom(self, user, msg):
         rn = msg.split()
-        rName = str(rn[1])
+        rName = str(rn[2])
         self.addtoRoom(user, rName)
 

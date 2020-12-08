@@ -1,39 +1,49 @@
 #how the rooms are defined for use by hall.py
-
+ENC = 'ascii'
 class Room:
 
     def __init__(self, roomName):
         self.history = ''
         self.nicks = []
         self.name = roomName
+        self.msg = ''
 
     def displayNicks(self, user):
         for nick in self.nicks:
-            user.socket.sendall(nick.name)
+            if self.msg == '':
+                self.msg = nick.name
+            else:
+                self.msg = self.msg + ", " + nick.name
+            #print (self.msg)
+        #self.msg = self.msg + "\n"
+        print(self.msg)
+        user.socket.sendall(self.msg.encode(ENC))
+        user.socket.sendall("\n".encode(ENC))
+        self.msg = ''
 
-    def broadcast(self, user, msg):
-        self.msg = user.name + ": " + msg
+    def broadcast(self, msg):
+        #self.msg = msg
+        self.msg = self.name + " >> " + msg
         self.history = self.history + str(msg)
-        for nick in self.nicks:
-            print("loop")
-            nick.socket.sendall(self.msg.encode())
-            #nick.socket.sendall(b"")#msg.encode())
+        for person in self.nicks:
+            person.socket.sendall(self.msg.encode(ENC))
+        self.msg = ''
 
 
     def userSetup(self, user):
         message = '{}! welcome to, {}'.format(user, self.name)
         self.history = self.history + message
-        user.socket.sendall(self.history.encode())
+        user.socket.sendall(self.history.encode(ENC))
         for present in self.nicks:
             if present.name != user.name:
-                user.socket.sendall(self.history.encode())
+                user.socket.sendall(self.history.encode(ENC))
 
 
 
     def userRemoval(self, user):
         self.nicks.remove(user)
-        message = '{} has left, {}'.format(user, self.name)
+        message = '{} has left, {}'.format(user.name, self.name)
         self.history = self.history + str(message)
         for present in self.nicks:
             if present.name != user.name:
-                present.socket.sendall(message.encode())
+                present.socket.sendall(message.encode(ENC))

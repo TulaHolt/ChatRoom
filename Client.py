@@ -1,7 +1,7 @@
 import socket, sys, threading
 #server info
 PORT = 8000
-bufferSize = 4096
+bufferSize = 'ascii'
 name = ''
 
 #functions
@@ -10,26 +10,49 @@ name = ''
 def receive():
     while True:
         try:
-            message = client.recv(bufferSize).decode()
+            message = client.recv(1024).decode(bufferSize)
             if message == 'NICKNAME':
-                client.send(name.encode())
+                client.send(name.encode(bufferSize))
             else:
                 print(message)
         except:
             print("An error occured!")
             client.close()
-            break
+            sys.exit(1)
 
 
 def write():
     while True:
-        msg = input('>')
+        msg = '{}: {}'.format(name,input('>'))
         if msg == "/quit":
             message = '{} logged out'.format(name)
-            client.send(message.encode())
+            client.send(message.encode(bufferSize))
             client.close()
             sys.exit(1)
-        client.send(msg.encode())
+        client.send(msg.encode(bufferSize))
+
+'''def run():
+
+        message = client.recv(1024).decode(bufferSize)
+
+        if(message):
+            if message == 'NICKNAME':
+                client.send(name.encode(bufferSize))
+            else:
+                print(message)
+             
+        else:
+
+            msg = '{}: {}'.format(name,input('>'))
+            print(message)
+            if message == "/quit":
+                 message = '{} logged out'.format(name)
+                 client.send(message.encode(bufferSize))
+                 client.close()
+                 sys.exit(1)
+            else:
+                client.send(msg.encode(bufferSize))'''
+
 
 
 #main body of client
@@ -50,3 +73,5 @@ else :
     receive_thread.start()
     write_thread = threading.Thread(target=write)
     write_thread.start()
+    #receive_thread = threading.Thread(target=run)
+    #receive_thread.start()
