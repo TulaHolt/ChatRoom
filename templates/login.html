@@ -20,18 +20,17 @@
     </div>
     </nav>
     </div>
-    {{msg}}
     <div class="login-clean">
 
         <form method="post" action="/check">
             <h2 class="sr-only">Login Form</h2>
-            <div class="illustration"><i class="icon ion-ios-navigate" style="color:#aedc8a;"></i></div>
+            <h2 class="text-center">Welcome Back</h2>
+            <div class="text-center">{{msg}}</div>
             <div class="form-group"><input class="form-control" type="username" name="username" placeholder="Username"></div>
             <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
             <div class="form-group">
              <input type="submit" name="submit" value="Login" class="btn btn-primary btn-block" style="background-color:#aedc8a;color:rgb(40,140,38);">
             </div>
-            <a href="#" class="forgot">Forgot your email or password?</a>
         </form>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

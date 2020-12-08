@@ -25,17 +25,18 @@
             <div class="intro">
                 <h2 class="text-center">Welcome {{username}} &nbsp;</h2>
                     <div class="text-center">
+                        <p>{{msg}}</p>
                         <a class="btn btn-light action-button" role="button" href="{{url_for('createroom')}}" style="background-color:#aedc8a;">Create Room</a>
                         <p></p>
                         <p>Rooms Available</p>
                     </div>
-                <script>
-                    {% for room in rooms %}
-                        view.load({
-                                p: '{{room.name}} : {{room.users}} Users'
-                            });
+                <p class="text-center">
+                    {% for rooms in room %}
+                        {{ rooms.roomname }} <a class="btn btn-light action-button" role="button" href="{{url_for('chat', chatroom=rooms.roomname, username=username)}}" style="background-color:#aedc8a;">Join</a>
+                        <br>
                     {% endfor %}
-                </script>
+                </p>
+
             </div>
         </div>
     </div>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatroomz dynamoDB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
+    <link rel="stylesheet" href="static/css/styles.min.css">
+</head>
+
+<body>
+    <div>
+        <nav class="navbar navbar-light navbar-expand-md navigation-clean">
+            <div class="container"><a class="navbar-brand" href="{{url_for('login')}}" style="color:#b6d781;">Chatroomz</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                <div
+                        class="collapse navbar-collapse" id="navcol-1"></div>
+            </div>
+        </nav>
+    </div>
+
+    <h2 class="text-center">Welcome To Chat Room {{ chatroom }} </h2>
+
+    <div id="messages"></div>
+
+    <form id="message_input_form">
+        <input class="form-control" type="text" id="message_input" placeholder="Enter new message here">
+        <button type="submit" class="btn btn-primary btn-block" style="background-color:#aedc8a;color:rgb(40,140,38);">Send</button>
+    </form>
+
+    <div id="users_in_room">
+        <p>
+            <b>Online</b>
+        </p>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
+</body>
+<!-- Set up client side of socketio -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+<script>
+    const socket = io.connect("http://127.0.0.1:5000");
+    socket.on('connect', function () {
+        socket.emit('join_room', {
+            username: "{{ username }}",
+            chatroom: "{{ chatroom }}"
+        });
+
+        let message_input = document.getElementById('message_input');
+
+        document.getElementById('message_input_form').onsubmit = function (e) {
+            e.preventDefault();
+            let message = message_input.value.trim();
+            if(message.length) {
+                socket.emit('send_message', {
+                    username: "{{ username }}",
+                    chatroom: "{{ chatroom }}",
+                    message: message
+                })
+            }
+            <!-- Message has been set so make message input empty -->
+            message_input.value = '';
+            <!-- Make the cursor go back to the message input -->
+            message_input.focus();
+        }
+
+        <!--
+        socket.emit('show_users', {
+            username: "{{ username }}",
+            chatroom: "{{ chatroom }}"
+        });
+        -->
+    });
+
+    window.onbeforeunload = function () {
+        socket.emit('leave_room', {
+            username: "{{ username }}",
+            chatroom: "{{ chatroom }}"
+        })
+    };
+
+    socket.on('recieve_message', function (data) {
+        console.log(data);
+        if(data.chatroom == "{{ chatroom }}") {
+            const newNode = document.createElement('div');
+            newNode.innerHTML = `<b>${data.username}:&nbsp;</b> ${data.message}`;
+            document.getElementById('messages').appendChild(newNode);
+        }
+    });
+
+    socket.on('join_room_announcement', function (data) {
+        console.log(data);
+        if(data.username !== "{{ username }}" && data.chatroom == "{{ chatroom }}") {
+            const newNode = document.createElement('div');
+            newNode.innerHTML = `<b>${data.username}</b> has joined the chat`;
+            document.getElementById('messages').appendChild(newNode);
+        }
+    });
+
+    socket.on('leave_room_announcement', function (data) {
+        console.log(data);
+        if(data.chatroom == "{{ chatroom }}") {
+            const newNode = document.createElement('div');
+            newNode.innerHTML = `<b>${data.username}</b> has left the chat`;
+            document.getElementById('messages').appendChild(newNode);
+        }
+    })
+</script>
+
+</html>
