@@ -29,6 +29,7 @@
             <form method="post" action="/newroom">
                 <h2 class="sr-only">Enter Name of New Room</h2>
                 <div class="form-group"><input class="form-control" type="roomname" name="roomname" placeholder="Room Name"></div>
+                <input type="hidden" name="username" value="{{ username }}" />
                 <div class="form-group">
                     <input type="submit" name="submit" value="Create" class="btn btn-primary btn-block" style="background-color:#aedc8a;color:rgb(40,140,38);">
                 </div>
@@ -43,3 +44,4 @@
 </body>
 
 </html>
+

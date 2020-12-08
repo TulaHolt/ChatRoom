@@ -30,11 +30,13 @@
         <button type="submit" class="btn btn-primary btn-block" style="background-color:#aedc8a;color:rgb(40,140,38);">Send</button>
     </form>
 
+    <!--
     <div id="users_in_room">
         <p>
             <b>Online</b>
         </p>
     </div>
+    -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
@@ -75,12 +77,31 @@
         -->
     });
 
+
     window.onbeforeunload = function () {
         socket.emit('leave_room', {
             username: "{{ username }}",
             chatroom: "{{ chatroom }}"
         })
     };
+
+    <!--
+    socket.on('users_announcement', function (data) {
+        console.log(data);
+        if(data.username == "{{ username }}" && data.chatroom == "{{ chatroom }}") {
+            {% for entry in users_active %}
+                const newNode = document.createElement('div');
+                newNode.innerHTML = `${entry.username}`;
+                document.getElementById('users_in_room').appendChild(newNode);
+            {% endfor %}
+        }
+        else {
+            const newNode = document.createElement('div');
+            newNode.innerHTML = `${data.username}`;
+            document.getElementById('users_in_room').appendChild(newNode);
+        }
+    });
+    -->
 
     socket.on('recieve_message', function (data) {
         console.log(data);
@@ -111,3 +132,4 @@
 </script>
 
 </html>
+

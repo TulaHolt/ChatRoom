@@ -84,14 +84,15 @@ def home():
 
 
 # Create new room template
-@app.route('/createroom')
-def createroom():
-    return render_template('createroom.html')
+@app.route('/createroom/<username>')
+def createroom(username):
+    return render_template('createroom.html', username=username)
 
 
 # User enters a new room to be stored
 @app.route('/newroom', methods=['post'])
 def newroom():
+    username = request.form['username']
     if request.method == 'POST':
         roomname = request.form['roomname']
 
@@ -117,8 +118,8 @@ def newroom():
         r = ([[f['roomname']] for f in gbentries['Items']])
         room = [dict(roomname=row[0]) for row in r]
 
-        return render_template('home.html', msg=msg, room=room)
-    return render_template('createroom.html')
+        return render_template('home.html', msg=msg, room=room, username=username)
+    return render_template('createroom.html', username=username)
 
 
 # Sends user to appropriate chatroom depending on which they choose to join
@@ -126,9 +127,6 @@ def newroom():
 def chat(chatroom, username):
     return render_template('chat.html', username=username, chatroom=chatroom)
 
-
-# Display all users in a room
-# @socketio.on('')
 
 # Allows user to join room and notifies room that someone has joined
 @socketio.on('join_room')
@@ -160,23 +158,33 @@ def handle_send_message_event(data):
     socketio.emit('recieve_message', data, chatroom=data['chatroom'])
 
 
-''' 
-def chat():
-    # Get username and room name to join correct chat
-    username = request.args.get('username')
-    chatroom = request.args.get('chatroom')
-
-    room = request.args.get('room')
-    # make sure we have these two values before rendering chat
-    if username and chatroom:
-        return render_template('chat.html', username=username, chatroom=chatroom, room=room)
-
-    msg = "Enter valid Room Name"
-    return render_template('home.html', username=username, msg=msg, room=room)
-    '''
-
-
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
-    # app.run(debug=True)
+
+'''
+# Display all users in a room
+@socketio.on('show_users')
+def handle_show_users_event(data):
+    app.logger.info("{} is active in {}".format(data['username'], data['chatroom']))
+    table = dynamodb.Table('userdata')
+
+    table.put_item(
+        Item={
+            'username': data['username'],
+            'room': data['chatroom']
+        }
+    )
+    socketio.emit('users_announcement', data, chatroom=data['chatroom'], users_active=table)
+    '''
+
+'''
+    user_list = set()
+    user_list.add(data['username'])
+    socketio.emit('users_announcement', data, chatroom=data['chatroom'], user_list=user_list)
+
+    participants = list(socketio.server.manager.get_participants(namespace='/chat', room=data['chatroom']))
+    for participant in participants:
+        socketio.emit('users_announcement', data, chatroom=data['chatroom'])
+'''
+

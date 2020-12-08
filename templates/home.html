@@ -26,7 +26,7 @@
                 <h2 class="text-center">Welcome {{username}} &nbsp;</h2>
                     <div class="text-center">
                         <p>{{msg}}</p>
-                        <a class="btn btn-light action-button" role="button" href="{{url_for('createroom')}}" style="background-color:#aedc8a;">Create Room</a>
+                        <a class="btn btn-light action-button" role="button" href="{{url_for('createroom', username=username)}}" style="background-color:#aedc8a;">Create Room</a>
                         <p></p>
                         <p>Rooms Available</p>
                     </div>
